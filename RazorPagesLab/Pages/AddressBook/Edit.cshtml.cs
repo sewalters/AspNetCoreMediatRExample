@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -21,12 +23,30 @@ public class EditModel : PageModel
 
 	public void OnGet(Guid id)
 	{
-		// Todo: Use repo to get address book entry, set UpdateAddressRequest fields.
+		//First, access entry in AddressBook.
+		var entry = _repo.Find(new EntryByIdSpecification(id)).FirstOrDefault();
+		
+		//If entry exists, we can now update it.
+		UpdateAddressRequest = new UpdateAddressRequest
+		{
+			Id = entry.Id,
+			Line1 = entry.Line1,
+			Line2 = entry.Line2,
+			City = entry.City,
+			State = entry.State,
+			PostalCode = entry.PostalCode,
+		};
 	}
 
 	public ActionResult OnPost()
 	{
-		// Todo: Use mediator to send a "command" to update the address book entry, redirect to entry list.
+		//First check that the request is properly set up.
+		if (ModelState.IsValid) {
+			//If properly set up, send request to Update entry and return to Index page.
+			_mediator.Send(UpdateAddressRequest);
+			return RedirectToPage("Index");
+		}
+
 		return Page();
 	}
 }

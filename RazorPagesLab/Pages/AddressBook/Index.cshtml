@@ -15,7 +15,8 @@
 			<li class="list-group-item">
 				<div class="row">
 					<div class="col-md-8">
-						@($"{entry.Line1} " +
+						@($"{entry.Line1} " + 
+						$"{entry.Line2} " +
 						$"{entry.City}, {entry.State} {entry.PostalCode}")
 					</div>
 					<div class="col-md-2">
@@ -25,7 +26,10 @@
 						</a>
 					</div>
 					<div class="col-md-2">
-						<a asp-page="Delete">Delete</a>
+						<a asp-page="Delete"
+						   asp-route-id="@entry.Id">
+						   Delete
+					   </a>
 					</div>
 				</div>
 			</li>
